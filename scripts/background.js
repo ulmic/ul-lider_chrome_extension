@@ -11,7 +11,7 @@ function api_url(object, func) {
   return settings.host + '/' + object + '/' + func;
 }
 
-chrome.tabs.onCreated.addListener(function() {
+function updateNewsCount() {
   $.ajax({
     dataType: "text",
     type: "GET",
@@ -28,7 +28,10 @@ chrome.tabs.onCreated.addListener(function() {
     },
     error: error_response
   });
-});
+}
+
+updateNewsCount();
+var updateNewsCountWithInterval = setInterval(updateNewsCount(), 1800000);
 
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.tabs.create({'url': "http://ul-lider.ru"}, function(tab) {});
