@@ -1,5 +1,5 @@
 var settings = {
-  host: 'http://new.ul-lider.ru/api/'
+  host: 'http://ul-lider.ru/api/'
 };
 
 var error_response = function(request, exception) {
