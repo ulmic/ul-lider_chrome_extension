@@ -3,7 +3,6 @@ var settings = {
 };
 
 var error_response = function(request, exception) {
-  alert(exception);
   chrome.browserAction.setBadgeText({text: 'ERR'});
 }
 
