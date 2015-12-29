@@ -1,5 +1,5 @@
 var settings = {
-  host: 'http://ul-lider.ru/api/'
+  host: 'http://ulmic.ru/api/'
 };
 
 var error_response = function(request, exception) {
@@ -7,21 +7,22 @@ var error_response = function(request, exception) {
 }
 
 function api_url(object, func) {
-  return settings.host + '/' + object + '/' + func;
+  return settings.host + object + '?' + func;
 }
 
 function updateNewsCount() {
   $.ajax({
     dataType: "text",
     type: "GET",
-    url: api_url('news', 'last_news'),
+    url: api_url('news', 'data=id'),
     success: function(data) {
-      array = JSON.parse(data);
-      chrome.storage.sync.get('last_news', function(obj) {
-        var store_last_news_id = parseInt(obj['last_news']);
-        var index = $.inArray(store_last_news_id, array);
+      array = $.parseJSON(data);
+      chrome.storage.sync.get('news_id', function(obj) {
+        if(obj['news_id'] == undefined)
+          obj['news_id'] = "[]";
+        var news = $.parseJSON(obj['news_id']);
         chrome.browserAction.setBadgeText({
-          text: (array.length - index - 1).toString()
+          text: (array.length - news.length).toString()
         });
       });
     },
@@ -37,9 +38,10 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   $.ajax({
     dataType: "text",
     type: "GET",
-    url: api_url('news', 'last_news_id'),
+    url: api_url('news', 'data=id'),
     success: function(data) {
-      chrome.storage.sync.set({ 'last_news': data.toString() }, function(){})
+      chrome.storage.sync.set({ 'news_id': data }, function(){})
+      updateNewsCount();
     },
     error: error_response
   });
